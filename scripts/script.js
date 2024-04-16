@@ -310,7 +310,11 @@
             addOptionButton.addEventListener("click", function () {
                 const currentOptions = this.parentElement.parentElement.querySelectorAll(".qa-option-box");
                 const optionsBox = createQAOptionsBox(currentOptions.length + 1);
-                currentOptions[currentOptions.length - 1].after(optionsBox);
+                if(currentOptions.length > 0){
+                    currentOptions[currentOptions.length - 1].after(optionsBox);
+                }else{
+                    this.parentElement.before(optionsBox);
+                }
                 optionsBox.querySelector(".qa-option-input").focus();
             });
             addOptionBox.appendChild(addOptionButton);
