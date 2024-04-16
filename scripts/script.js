@@ -119,27 +119,28 @@
                 input.closest(".builder-item").classList.remove("active");
             }
         }
+        function createFooterButton(iconSrc, title, eventType){
+            const button = createAlement("button", [], ["footer-button"]);
+            const icon = createAlement("img", [], ["footer-button-icon", eventType]);
+            icon.setAttribute("src", `${assets}images/${iconSrc}`);
+            button.appendChild(icon);
+            button.setAttribute("title", title);
+            button.addEventListener("click", () => {
+                document.getElementById("builder-item-box").appendChild(createFormComponent(eventType, true, true));
+            });
+            return button;
+        };
         function getFooterBox() {
             const footerBox = createAlement("div", [{
                 name: "id",
                 value: "form-builder-footer-box"
             }]);
-            const footerAddTitleDescription = createAlement("button", [], ["footer-button"]);
-            const footerAddTitleDescriptionIcon = createAlement("img", [], ["footer-button-icon", "add-title-and-description"]);
-            footerAddTitleDescriptionIcon.setAttribute("src", `${assets}images/add-title-and-desc.png`);
-            footerAddTitleDescription.appendChild(footerAddTitleDescriptionIcon);
-            footerAddTitleDescription.setAttribute("title", "Add title and description");
-            footerAddTitleDescription.addEventListener("click", function(){
-                document.getElementById("builder-item-box").appendChild(createFormComponent("add-title-and-description", true, true));
-            });
-            const multipleChoice = createAlement("button", [], ["footer-button"]);
-            const multipleChoiceIcon = createAlement("img", [], ["footer-button-icon", "add-multiple-choice"]);
-            multipleChoiceIcon.setAttribute("src", `${assets}images/add-question.png`);
-            multipleChoice.appendChild(multipleChoiceIcon);
-            multipleChoice.setAttribute("title", "Add multiple choice");
-            multipleChoice.addEventListener("click", function(){
-                document.getElementById("builder-item-box").appendChild(createFormComponent("add-multiple-choice", true, true));
-            });
+            const footerAddTitleDescription = createFooterButton("add-title-and-desc.png", "Add title and description", "add-title-and-description");
+            const multipleChoice = createFooterButton("add-question.png", "Add multiple choice", "add-multiple-choice");
+            const shortQuestionAnswer = createFooterButton("add-question-answer.png", "Add short question answer", "add-short-question-answer");
+            const longQuestionAnswer = createFooterButton("add-question-answer.png", "Add long question answer", "add-long-question-answer");
+            footerBox.appendChild(shortQuestionAnswer);
+            footerBox.appendChild(longQuestionAnswer);
             footerBox.appendChild(multipleChoice);
             footerBox.appendChild(footerAddTitleDescription);
             return footerBox;
@@ -258,12 +259,20 @@
                 const multipleChoiceBox = createMultipleChoiceComponent();
                 item.appendChild(multipleChoiceBox);
             }
+            if(type == "add-short-question-answer"){
+                const shortAnswerQuestionBox = createanswerQuestionComponent("short");
+                item.appendChild(shortAnswerQuestionBox);
+            }
+            if(type == "add-long-question-answer"){
+                const longAnswerQuestionBox = createanswerQuestionComponent("long");
+                item.appendChild(longAnswerQuestionBox);
+            }
             if(footer){
                 const footerOptions = {};
-                if(type == "add-title-and-description" || type == "add-multiple-choice"){
+                if(type == "add-title-and-description" || type == "add-multiple-choice" || type == "add-short-question-answer" || type == "add-long-question-answer"){
                     footerOptions.delete = true;
                 }
-                if(type == "add-multiple-choice"){
+                if(type == "add-multiple-choice" || type == "add-short-question-answer" || type == "add-long-question-answer"){
                     footerOptions.required = true;
                 }
                 if(!isObjEmpty(footerOptions)){
@@ -306,6 +315,15 @@
             });
             addOptionBox.appendChild(addOptionButton);
             return addOptionBox;
+        }
+        function createanswerQuestionComponent(type) {
+            const box = createAlement("div");
+            const commonInputBox = createQAInputBox();
+            box.appendChild(commonInputBox);
+            const optionsMainBox = createAlement("div");
+            optionsMainBox.classList.add("short-qa-main-box");
+            box.appendChild(optionsMainBox);
+            return box;
         }
         var draggableQAOptionItem = null;
         function createQAOptionsBox(number=1) {
