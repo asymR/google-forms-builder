@@ -144,7 +144,7 @@
             footerBox.appendChild(footerAddTitleDescription);
             return footerBox;
         }
-        var draggableItem = null;
+        var draggableBuilderItem = null;
         function builderItem(allClasses=[], drag) {
             totalBuilderItems++;
             allClasses.push("builder-item");
@@ -153,22 +153,22 @@
             if(drag){
                 item.setAttribute("draggable", true);
                 item.addEventListener("dragstart", function (event) {
-                    draggableItem = event.target;
-                    draggableItem.classList.add('dragging');
+                    draggableBuilderItem = event.target;
+                    draggableBuilderItem.classList.add('dragging');
                 });
                 item.addEventListener("dragover", function (event) {
                     event.preventDefault();
-                    if(!draggableItem){ return false; }
+                    if(!draggableBuilderItem){ return false; }
                 });
                 item.addEventListener("drop", function (event) {
                     event.preventDefault();
-                    if(!draggableItem){ return false; }
+                    if(!draggableBuilderItem){ return false; }
                     itemDrop(event);
                 });
                 item.addEventListener("dragend", function (event) {
-                    if(!draggableItem){ return false; }
-                    draggableItem.classList.remove('dragging');
-                    draggableItem = null;
+                    if(!draggableBuilderItem){ return false; }
+                    draggableBuilderItem.classList.remove('dragging');
+                    draggableBuilderItem = null;
                 });
             }
             return item;
@@ -307,21 +307,27 @@
             addOptionBox.appendChild(addOptionButton);
             return addOptionBox;
         }
+        var draggableQAOptionItem = null;
         function createQAOptionsBox(number=1) {
             const optionBox = createAlement("div", [], ["qa-option-box", "qa-item-option-element"]);
             optionBox.setAttribute("draggable", true);
             optionBox.addEventListener("dragstart", function (event) {
-                event.target.classList.add('dragging');
-            });
-            optionBox.addEventListener("dragend", function (event) {
-                event.target.classList.remove('dragging');
+                draggableQAOptionItem = event.target;
+                draggableQAOptionItem.classList.add('dragging');
             });
             optionBox.addEventListener("dragover", function (event) {
                 event.preventDefault();
+                if(!draggableQAOptionItem){ return false; }
             });
             optionBox.addEventListener("drop", function (event) {
                 event.preventDefault();
+                if(!draggableQAOptionItem){ return false; }
                 itemDrop(event);
+            });
+            optionBox.addEventListener("dragend", function (event) {
+                if(!draggableQAOptionItem){ return false; }
+                draggableQAOptionItem.classList.remove('dragging');
+                draggableQAOptionItem = null;
             });
             const preOptionBeforeImg = createAlement("img", [{
                 name: "src",
