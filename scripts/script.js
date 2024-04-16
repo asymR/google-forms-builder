@@ -25,12 +25,12 @@
             });
         });
         function loadCDNs() {
-            const tweenMax = document.createElement('script');
-            tweenMax.setAttribute('src',`${assets}scripts/TweenMax.min.js`);
-            document.head.appendChild(tweenMax);
-            const draggable = document.createElement('script');
-            draggable.setAttribute('src',`${assets}scripts/Draggable.min.js`);
-            document.head.appendChild(draggable);
+            // const tweenMax = document.createElement('script');
+            // tweenMax.setAttribute('src',`${assets}scripts/TweenMax.min.js`);
+            // document.head.appendChild(tweenMax);
+            // const draggable = document.createElement('script');
+            // draggable.setAttribute('src',`${assets}scripts/Draggable.min.js`);
+            // document.head.appendChild(draggable);
         }
         function createAlement(name = "div", attributes=[], classes=[]) {
             const element = document.createElement(name);
