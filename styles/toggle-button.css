@@ -1,0 +1,67 @@
+.form-builder-main-box .switch-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.form-builder-main-box .switch-container .toggle-container {
+    --_switch-height: 24px;
+    --_switch-width: 48px;
+    position: relative;
+    margin-right: 0.5em;
+    height: var(--_switch-height);
+    width: var(--_switch-width);
+    & input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+}
+.form-builder-main-box .switch-container .slider {
+    --outline-width: 1px;
+    position: absolute;
+    inset: 0;
+    background-color: #34373e;
+    border-radius: 9999px;
+    outline: 1px solid whitesmoke;
+    cursor: pointer;
+    transition: background-color 300ms ease-out;
+    .toggle-container input:checked + & {
+        background-color: #673ab7;
+        filter: brightness(130%);
+        transition: background-color 150ms ease-out;
+    }
+    &::before {
+        --_ratio: 80%;
+        --_offset: 2px;
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: var(--_offset);
+        right: unset;
+        translate: 0 -50%;
+        height: var(--_ratio);
+        aspect-ratio: 1 / 1;
+        background-color: rgba(245 245 245 / 0.85);
+        border-radius: 50%;
+        transition: translate 300ms ease-out;
+    }
+    .toggle-container input:checked + &::before {
+        left: 0;
+        translate: calc((var(--_switch-width) - 100%) - var(--_offset)) -50%;
+        transition: translate 150ms ease-out;
+    }
+}
+.form-builder-main-box .switch-container .switch-status {
+    color: whitesmoke;
+    opacity: 0.85;
+    .toggle-container:has(#switch[checked]) + & {
+        opacity: 1;
+        font-weight: 500;
+    }
+}
