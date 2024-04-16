@@ -229,3 +229,13 @@
     width: 20px;
     height: 20px;
 }
+.form-builder-main-box .dragger.unselectable::before {
+    content: "";
+    display: block;
+    background-image: url('../images/drag.png');
+    background-size: 25px 25px;
+    width: 25px;
+    height: 25px;
+    margin: auto;
+    opacity: 0.5;
+}

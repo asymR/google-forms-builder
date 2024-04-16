@@ -144,6 +144,7 @@
             footerBox.appendChild(footerAddTitleDescription);
             return footerBox;
         }
+        var draggableItem = null;
         function builderItem(allClasses=[], drag) {
             totalBuilderItems++;
             allClasses.push("builder-item");
@@ -152,17 +153,22 @@
             if(drag){
                 item.setAttribute("draggable", true);
                 item.addEventListener("dragstart", function (event) {
-                    event.target.classList.add('dragging');
-                });
-                item.addEventListener("dragend", function (event) {
-                    event.target.classList.remove('dragging');
+                    draggableItem = event.target;
+                    draggableItem.classList.add('dragging');
                 });
                 item.addEventListener("dragover", function (event) {
                     event.preventDefault();
+                    if(!draggableItem){ return false; }
                 });
                 item.addEventListener("drop", function (event) {
                     event.preventDefault();
+                    if(!draggableItem){ return false; }
                     itemDrop(event);
+                });
+                item.addEventListener("dragend", function (event) {
+                    if(!draggableItem){ return false; }
+                    draggableItem.classList.remove('dragging');
+                    draggableItem = null;
                 });
             }
             return item;
@@ -202,11 +208,6 @@
         }
         function getDragger() {
             const draggerBox = createAlement("div", [], ["dragger", "unselectable"]);
-            const draggerImg = createAlement("img", [{
-                name: "src",
-                value: `${assets}images/drag.png`
-            }], ["unselectable"]);
-            draggerBox.appendChild(draggerImg);
             return draggerBox;
         }
         function createFormComponent(type, drag = true, footer=false) {
