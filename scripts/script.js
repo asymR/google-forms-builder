@@ -137,10 +137,10 @@
             }]);
             const footerAddTitleDescription = createFooterButton("add-title-and-desc.png", "Add title and description", "add-title-and-description");
             const multipleChoice = createFooterButton("add-question.png", "Add multiple choice", "add-multiple-choice");
-            const shortQuestionAnswer = createFooterButton("add-question-answer.png", "Add short question answer", "add-short-question-answer");
-            const longQuestionAnswer = createFooterButton("add-question-answer.png", "Add long question answer", "add-long-question-answer");
-            footerBox.appendChild(shortQuestionAnswer);
-            footerBox.appendChild(longQuestionAnswer);
+            // const shortQuestionAnswer = createFooterButton("add-question-answer.png", "Add short question answer", "add-short-question-answer");
+            // const longQuestionAnswer = createFooterButton("add-question-answer.png", "Add long question answer", "add-long-question-answer");
+            // footerBox.appendChild(shortQuestionAnswer);
+            // footerBox.appendChild(longQuestionAnswer);
             footerBox.appendChild(multipleChoice);
             footerBox.appendChild(footerAddTitleDescription);
             return footerBox;
