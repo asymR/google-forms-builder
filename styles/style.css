@@ -254,6 +254,9 @@
     border-bottom: solid 1px lightgrey;
     padding: 5px 10px;
 }
+.form-builder-main-box .qa-main-box .qa-main-box-input:focus, .form-builder-main-box .qa-other-option-box .input:focus{
+    border-bottom-color: #673ab7;
+}
 .form-builder-main-box .required{
     color: red;
 }
