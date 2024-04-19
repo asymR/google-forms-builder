@@ -106,7 +106,7 @@
     margin-top: 2rem;
     display: flex;
     justify-content: end;
-    padding: 10px 10px 0 10px;
+    padding: 10px 0;
     align-items: center;
 }
 .form-builder-main-box .component-footer-box img{
