@@ -239,3 +239,25 @@
     margin: auto;
     opacity: 0.5;
 }
+.form-builder-main-box .qa-main-box {
+    display: flex;
+    justify-content: space-between;
+}
+.form-builder-main-box .qa-main-box .qa-main-box-title{
+    opacity: 0.7;
+    border-bottom: dotted 2px #999;
+    line-height: 2;
+    width: 50%;
+}
+.form-builder-main-box .qa-main-box .qa-main-box-input{
+    width: 100%;
+    font-size: 14px;
+    border-radius: var(--border-radius-base);
+    box-shadow: unset;
+    outline: none;
+    border: solid 1px lightgrey;
+    padding: 10px;
+}
+.form-builder-main-box .required{
+    color: red;
+}

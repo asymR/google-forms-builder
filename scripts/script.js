@@ -305,13 +305,24 @@
             addOptionBox.appendChild(addOptionButton);
             return addOptionBox;
         }
-        function createanswerQuestionComponent(type) {
+        function createanswerQuestionComponent() {
             const box = createAlement("div");
             const commonInputBox = createQAInputBox();
             box.appendChild(commonInputBox);
-            const optionsMainBox = createAlement("div");
-            optionsMainBox.classList.add("qa-main-box");
-            box.appendChild(optionsMainBox);
+            const qaMainBox = createAlement("div");
+            qaMainBox.classList.add("qa-main-box");
+            const qaMainBoxText = createAlement("span", [], ["qa-main-box-title"]);
+            qaMainBoxText.innerHTML = 'Short answer text';
+            qaMainBox.appendChild(qaMainBoxText);
+            let qaToggleSwitch = toggleSwitch("Paragraph", function (event) {
+                if(event.target.classList.contains("active")){
+                    qaMainBoxText.innerHTML = "Long answer text";
+                }else{
+                    qaMainBoxText.innerHTML = "Short answer text";
+                }
+            });
+            qaMainBox.appendChild(qaToggleSwitch);
+            box.appendChild(qaMainBox);
             return box;
         }
         var draggableQAOptionItem = null;
@@ -401,7 +412,7 @@
                     let divider = createAlement("div", [], ["divider"]);
                     footer.appendChild(divider);
                 }
-                footer.appendChild(toggleSwitch());
+                footer.appendChild(toggleSwitch("Required"));
             }
             return footer;
         }
@@ -411,14 +422,11 @@
             };
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         }
-        function toggleSwitch() {
+        function toggleSwitch(title, callBack=null) {
             const id = randomIdGenerator();
             const switchContainer = createAlement("label", [{
                 name: "for",
                 value: id
-            },{
-                name: "title", 
-                value: "Make this field required"
             }], ["switch-container"]);
             const toggleContainer = createAlement("div", [], ["toggle-container"]);
             const input = createAlement("input", [{
@@ -434,6 +442,16 @@
                 name: "aria-labelledby",
                 value: "switch-label"
             }]);
+            input.addEventListener("change", function (event) {
+                if(input.classList.contains("active")){
+                    input.classList.remove("active");
+                }else{
+                    input.classList.add("active");
+                }
+                if(callBack != null){
+                    callBack(event);
+                }
+            });
             toggleContainer.appendChild(input);
             const slider = createAlement("span", [], ["slider"]);
             toggleContainer.appendChild(slider);
@@ -442,7 +460,7 @@
                 name: "aria-hidden",
                 value: true
             }], ["toggle-status"]);
-            toggleStatus.innerHTML = "REQUIRED";
+            toggleStatus.innerHTML = title;
             switchContainer.appendChild(toggleStatus);
             return switchContainer;
         }
@@ -677,8 +695,30 @@
                             innerElement.appendChild(radioOption);
                             innerElement.appendChild(optionBox);
                         }
+                        if(innerElement.classList.contains("qa-main-box")){
+                            let answerType = innerElement.querySelector(".qa-main-box-title").innerHTML;
+                            let questionInput = null;
+                            if(answerType == "Short answer text"){
+                                questionInput = createAlement("input", [{
+                                    name: "placeholder",
+                                    value: "Your answer"
+                                }], ["qa-main-box-input"]);
+                            }else{
+                                questionInput = createAlement("textarea", [{
+                                    name: "placeholder",
+                                    value: "Your answer"
+                                }], ["qa-main-box-input"]);
+                            }
+                            innerElement.innerHTML = "";
+                            innerElement.appendChild(questionInput);
+                        }
                     }
                 });
+                let optionCheckBox = element.querySelector(".component-footer-box").querySelector("input");
+                if(optionCheckBox && optionCheckBox.classList.contains("active")){
+                    builderItem.setAttribute("data-required", "required");
+                    builderItem.querySelector(".question").innerHTML = builderItem.querySelector(".question").innerHTML + '<span class="required">*<span>';
+                }
                 builderItemBox.appendChild(builderItem);
             });
             mainResultBox.appendChild(builderItemBox);
