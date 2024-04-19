@@ -87,7 +87,7 @@
     width: 20px;
     opacity: 0.5;
 }
-.form-builder-main-box .unselectable, .form-builder-main-box .add-title-and-description *, .form-builder-main-box .component-footer-box *, .form-builder-main-box .qa-option-box *, .form-builder-main-box .add-qa-option-box *, .form-builder-main-box .builder-input-widget *{
+.form-builder-main-box .unselectable, .form-builder-main-box .add-title-and-description *, .form-builder-main-box .component-footer-box *, .form-builder-main-box .qa-option-box *, .form-builder-main-box .qa-other-option-box *, .form-builder-main-box .add-qa-option-box *, .form-builder-main-box .builder-input-widget *{
     user-drag: none;
     -webkit-user-drag: none;
     user-select: none;
@@ -144,7 +144,7 @@
 .form-builder-main-box .add-qa-option-box{
     padding-left: 30px;
 }
-.form-builder-main-box .qa-option-box, .form-builder-main-box .add-qa-option-box{
+.form-builder-main-box .qa-option-box, .form-builder-main-box .qa-other-option-box, .form-builder-main-box .add-qa-option-box{
     gap: 10px;
     display: flex;
     align-items: center;
@@ -172,10 +172,12 @@
     display: none;
 }
 .form-builder-main-box .add-qa-option-button{
-    opacity: 0.5;
     font-size: 14px;
 }
-.form-builder-main-box .add-qa-option-button:hover{
+.form-builder-main-box .add-qa-option-button-box .add-option{
+    opacity: 0.5;
+}
+.form-builder-main-box .add-qa-option-button-box .add-option:hover{
     border-bottom: solid 1px lightgrey;
     cursor: text;
 }
@@ -222,7 +224,8 @@
 .form-builder-main-box .footer-button:hover,
 .form-builder-main-box .component-footer-box img,
 .form-builder-main-box .qa-option-close-image:hover,
-.form-builder-main-box #form-builder-save-button:hover{
+.form-builder-main-box #form-builder-save-button:hover,
+.form-builder-main-box .add-other-option:hover{
     cursor: pointer;
 }
 .form-builder-main-box .qa-radio-option{
@@ -260,4 +263,18 @@
 }
 .form-builder-main-box .required{
     color: red;
+}
+.form-builder-main-box .add-other-option{
+    color: #1a73e8;
+    padding: 10px;
+}
+.form-builder-main-box .add-other-option:hover{
+    background-color: #f8faff;
+}
+.form-builder-main-box .qa-option-input.qa-item-option-element.other:hover {
+    border-bottom: dotted 1px lightgrey;
+    cursor: auto;
+}
+.form-builder-main-box .qa-other-option-box.qa-item-option-element.other .qa-option-darg-image {
+    opacity: 0;
 }

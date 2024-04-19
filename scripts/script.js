@@ -290,19 +290,40 @@
                 value: `${assets}images/circle.png`
             }], ["qa-option-image"]);
             addOptionBox.appendChild(optionBeforeImg);
-            const addOptionButton = createAlement("div", [], ["add-qa-option-button"]);
-            addOptionButton.innerHTML = 'Add Option';
-            addOptionButton.addEventListener("click", function () {
-                const currentOptions = this.parentElement.parentElement.querySelectorAll(".qa-option-box");
+            const addOptionButtonBox = createAlement("div", [], ["add-qa-option-button-box"]);
+            const addOptionInnerTextButton = createAlement("span", [], ["add-option"]);
+            addOptionInnerTextButton.innerHTML = "Add Option";
+            addOptionInnerTextButton.addEventListener("click", function () {
+                const currentOptions = this.closest(".qa-option-main-box").querySelectorAll(".qa-option-box");
                 const optionsBox = createQAOptionsBox(currentOptions.length + 1);
                 if(currentOptions.length > 0){
                     currentOptions[currentOptions.length - 1].after(optionsBox);
                 }else{
-                    this.parentElement.before(optionsBox);
+                    this.closest(".qa-option-main-box").prepend(optionsBox);
                 }
-                optionsBox.querySelector(".qa-option-input").focus();
+                let qaOptionInput = optionsBox.querySelector(".qa-option-input");
+                qaOptionInput.focus();
+                qaOptionInput.select();
             });
-            addOptionBox.appendChild(addOptionButton);
+            const addOptionInnerTextOr = createAlement("span", [], ["or"]);
+            addOptionInnerTextOr.innerHTML = " or";
+            const addOptionInnerButton = createAlement("span", [], ["add-other-option"]);
+            addOptionInnerButton.innerHTML = 'add "Other"';
+            addOptionInnerButton.addEventListener("click", function () {
+                const currentOptions = this.closest(".qa-option-main-box").querySelectorAll(".qa-option-box");
+                const optionsBox = createQAOptionsBox(currentOptions.length + 1, 'other');
+                if(currentOptions.length > 0){
+                    currentOptions[currentOptions.length - 1].after(optionsBox);
+                }else{
+                    this.closest(".qa-option-main-box").prepend(optionsBox);
+                }
+                addOptionInnerButton.parentElement.querySelector(".or").style.display = "none";
+                addOptionInnerButton.style.display = "none";
+            });
+            addOptionButtonBox.appendChild(addOptionInnerTextButton);
+            addOptionButtonBox.appendChild(addOptionInnerTextOr);
+            addOptionButtonBox.appendChild(addOptionInnerButton);
+            addOptionBox.appendChild(addOptionButtonBox);
             return addOptionBox;
         }
         function createanswerQuestionComponent() {
@@ -326,27 +347,33 @@
             return box;
         }
         var draggableQAOptionItem = null;
-        function createQAOptionsBox(number=1) {
-            const optionBox = createAlement("div", [], ["qa-option-box", "qa-item-option-element"]);
-            optionBox.setAttribute("draggable", true);
-            optionBox.addEventListener("dragstart", function (event) {
-                draggableQAOptionItem = event.target;
-                draggableQAOptionItem.classList.add('dragging');
-            });
-            optionBox.addEventListener("dragover", function (event) {
-                event.preventDefault();
-                if(!draggableQAOptionItem){ return false; }
-            });
-            optionBox.addEventListener("drop", function (event) {
-                event.preventDefault();
-                if(!draggableQAOptionItem){ return false; }
-                itemDrop(event);
-            });
-            optionBox.addEventListener("dragend", function (event) {
-                if(!draggableQAOptionItem){ return false; }
-                draggableQAOptionItem.classList.remove('dragging');
-                draggableQAOptionItem = null;
-            });
+        function createQAOptionsBox(number=1, type = "input") {
+            let typeClass = "qa-option-box";
+            if(type == "other"){
+                typeClass = "qa-other-option-box";
+            }
+            const optionBox = createAlement("div", [], ["qa-item-option-element", typeClass, type]);
+            if(type == "input"){
+                optionBox.setAttribute("draggable", true);
+                optionBox.addEventListener("dragstart", function (event) {
+                    draggableQAOptionItem = event.target;
+                    draggableQAOptionItem.classList.add('dragging');
+                });
+                optionBox.addEventListener("dragover", function (event) {
+                    event.preventDefault();
+                    if(!draggableQAOptionItem){ return false; }
+                });
+                optionBox.addEventListener("drop", function (event) {
+                    event.preventDefault();
+                    if(!draggableQAOptionItem){ return false; }
+                    itemDrop(event);
+                });
+                optionBox.addEventListener("dragend", function (event) {
+                    if(!draggableQAOptionItem){ return false; }
+                    draggableQAOptionItem.classList.remove('dragging');
+                    draggableQAOptionItem = null;
+                });
+            }
             const preOptionBeforeImg = createAlement("img", [{
                 name: "src",
                 value: `${assets}images/drag.png`
@@ -357,16 +384,27 @@
                 value: `${assets}images/circle.png`
             }], ["qa-option-image", "qa-item-option-element"]);
             optionBox.appendChild(optionBeforeImg);
-            const optionInput = createAlement("input", [{
-                name: "value",
-                value: "Option"+number
-            }], ["qa-option-input", "qa-item-option-element"]);
-            optionBox.appendChild(optionInput);
+            if(type == "input"){
+                const optionInput = createAlement("input", [{
+                    name: "value",
+                    value: "Option"+number
+                }], ["qa-option-input", "qa-item-option-element"]);
+                optionBox.appendChild(optionInput);
+            }else{
+                const optionInputLabel = createAlement("div", [], ["qa-option-input", "qa-item-option-element", "other"]);
+                optionInputLabel.innerHTML = 'Other...';
+                optionBox.appendChild(optionInputLabel);
+            }
             const optionAfterImg = createAlement("img", [{
                 name: "src",
                 value: `${assets}images/close.png`
             }], ["qa-option-close-image", "qa-item-option-element"]);
             optionAfterImg.addEventListener("click", function(event){
+                if(this.parentElement.classList.contains("other")){
+                    let addOptionButtonsBox = this.parentElement.parentElement.querySelector(".add-qa-option-button-box");
+                    addOptionButtonsBox.querySelector(".or").style.display = "inline";
+                    addOptionButtonsBox.querySelector(".add-other-option").style.display = "inline";
+                }
                 if(this.parentElement.parentElement.querySelectorAll(".qa-option-box").length > 1){
                     this.parentElement.remove();
                 }else{
