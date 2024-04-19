@@ -185,9 +185,6 @@
 .form-builder-main-box .qa-option-box:hover .qa-option-darg-image{
     opacity: 0.5;
 }
-.form-builder-main-box .qa-option-box:hover, .form-builder-main-box .builder-item .dragger{
-    cursor: grab;
-}
 .form-builder-main-box .qa-radio-box{
     cursor: auto !important;
 }
@@ -220,9 +217,13 @@
 .form-builder-main-box .add-other-option:hover{
     cursor: pointer;
 }
-.form-builder-main-box .qa-radio-option{
+.form-builder-main-box .qa-option-box .qa-radio-option{
     width: 20px;
     height: 20px;
+}
+.form-builder-main-box .qa-other-option-box .qa-radio-option{
+    width: 23px;
+    height: 23px;
 }
 .form-builder-main-box .dragger::before {
     content: "";
@@ -244,14 +245,14 @@
     line-height: 2;
     width: 50%;
 }
-.form-builder-main-box .qa-main-box .qa-main-box-input{
+.form-builder-main-box .qa-main-box .qa-main-box-input, .form-builder-main-box .qa-other-option-box .input{
     width: 100%;
     font-size: 14px;
-    border-radius: var(--border-radius-base);
     box-shadow: unset;
     outline: none;
-    border: solid 1px lightgrey;
-    padding: 10px;
+    border: unset;
+    border-bottom: solid 1px lightgrey;
+    padding: 5px 10px;
 }
 .form-builder-main-box .required{
     color: red;

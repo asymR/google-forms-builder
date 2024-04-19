@@ -690,9 +690,9 @@
                                 innerElement.style.marginBottom = "1rem";
                             }
                         }
-                        if(innerElement.classList.contains("qa-option-box")){
+                        if(innerElement.classList.contains("qa-option-box") || innerElement.classList.contains("qa-other-option-box")){
                             countOptions++;
-                            let optionLabel = innerElement.querySelector(".qa-option-input").value;
+                            let optionLabel = innerElement.querySelector(".qa-option-input").value??"Other: ";
                             let optionId = countItem + "" + countOptions + "option";
                             let optionName = countItem + "option";
                             let optionBox = createAlement("label", [{
@@ -717,6 +717,9 @@
                             innerElement.innerHTML = "";
                             innerElement.appendChild(radioOption);
                             innerElement.appendChild(optionBox);
+                            if(innerElement.classList.contains("qa-other-option-box")){
+                                innerElement.appendChild(createAlement("input", [], ["input"]));
+                            }
                         }
                         if(innerElement.classList.contains("qa-main-box")){
                             let answerType = innerElement.querySelector(".qa-main-box-title").innerHTML;
