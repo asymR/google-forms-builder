@@ -349,8 +349,10 @@
         var dragbleQAOptionItem = null;
         function createQAOptionsBox(number=1, type = "input") {
             let typeClass = "qa-option-box";
+            let qaDragger = "qa-dragger";
             if(type == "other"){
                 typeClass = "qa-other-option-box";
+                qaDragger = "?";
             }
             const optionBox = createAlement("div", [], ["qa-item-option-element", typeClass, type]);
             const preOptionBeforeImg = createAlement("img", [{
@@ -359,7 +361,7 @@
             },{
                 name: "draggable",
                 value: true
-            }], ["qa-option-darg-image", "qa-item-option-element", "qa-dragger"]);
+            }], ["qa-option-darg-image", "qa-item-option-element", qaDragger]);
             optionBox.appendChild(preOptionBeforeImg);
             const optionBeforeImg = createAlement("img", [{
                 name: "src",
