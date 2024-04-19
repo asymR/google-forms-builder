@@ -134,31 +134,31 @@
             footerBox.appendChild(footerAddTitleDescription);
             return footerBox;
         }
-        var draggableBuilderItem = null;
+        var dragbleBuilderItem = null;
         function builderItem(allClasses=[], drag) {
             totalBuilderItems++;
             allClasses.push("builder-item");
             const item = createAlement("div", [], allClasses);
             item.setAttribute("data-id", totalBuilderItems);
             if(drag){
-                item.setAttribute("draggable", true);
+                // item.setAttribute("draggable", true);
                 item.addEventListener("dragstart", function (event) {
-                    draggableBuilderItem = event.target;
-                    draggableBuilderItem.classList.add('dragging');
+                    dragbleBuilderItem = event.target;
+                    dragbleBuilderItem.classList.add('dragging');
                 });
                 item.addEventListener("dragover", function (event) {
                     event.preventDefault();
-                    if(!draggableBuilderItem){ return false; }
+                    if(!dragbleBuilderItem){ return false; }
                 });
                 item.addEventListener("drop", function (event) {
                     event.preventDefault();
-                    if(!draggableBuilderItem){ return false; }
+                    if(!dragbleBuilderItem){ return false; }
                     itemDrop(event);
                 });
                 item.addEventListener("dragend", function (event) {
-                    if(!draggableBuilderItem){ return false; }
-                    draggableBuilderItem.classList.remove('dragging');
-                    draggableBuilderItem = null;
+                    if(!dragbleBuilderItem){ return false; }
+                    dragbleBuilderItem.classList.remove('dragging');
+                    dragbleBuilderItem = null;
                 });
             }
             return item;
@@ -166,16 +166,16 @@
         function itemDrop(event) {
             try {
                 let container = null;
-                let draggableElements = null;
+                let dragbleElements = null;
                 if(event.target.classList.contains('qa-item-option-element') == true){
                     container = event.target.closest(".qa-option-main-box");
-                    draggableElements = [...container.querySelectorAll('.qa-option-box:not(.dragging)')];
+                    dragbleElements = [...container.querySelectorAll('.qa-option-box:not(.dragging)')];
                 }else{
                     container = document.getElementById('builder-item-box');
-                    draggableElements = [...container.querySelectorAll('.builder-item:not(.dragging)')];
+                    dragbleElements = [...container.querySelectorAll('.builder-item:not(.dragging)')];
                 }
                 let dragging = document.querySelector('.dragging');
-                let afterElement = getDragAfterElement(draggableElements, event.clientY);
+                let afterElement = getDragAfterElement(dragbleElements, event.clientY);
                 if(afterElement.classList.contains('qa-option-box') == false && dragging.classList.contains('qa-item-option-element') == true){
                     return false;
                 }
@@ -185,8 +185,8 @@
                 container.insertBefore(dragging, afterElement);
             } catch (error) { }
         }
-        function getDragAfterElement(draggableElements, y) {
-            return draggableElements.reduce((closest, child) => {
+        function getDragAfterElement(dragbleElements, y) {
+            return dragbleElements.reduce((closest, child) => {
                 const box = child.getBoundingClientRect();
                 const offset = y - box.top - box.height / 2;
                 if (offset < 0 && offset > closest.offset) {
@@ -346,7 +346,7 @@
             box.appendChild(qaMainBox);
             return box;
         }
-        var draggableQAOptionItem = null;
+        var dragbleQAOptionItem = null;
         function createQAOptionsBox(number=1, type = "input") {
             let typeClass = "qa-option-box";
             if(type == "other"){
@@ -354,24 +354,24 @@
             }
             const optionBox = createAlement("div", [], ["qa-item-option-element", typeClass, type]);
             if(type == "input"){
-                optionBox.setAttribute("draggable", true);
+                // optionBox.setAttribute("draggable", true);
                 optionBox.addEventListener("dragstart", function (event) {
-                    draggableQAOptionItem = event.target;
-                    draggableQAOptionItem.classList.add('dragging');
+                    dragbleQAOptionItem = event.target;
+                    dragbleQAOptionItem.classList.add('dragging');
                 });
                 optionBox.addEventListener("dragover", function (event) {
                     event.preventDefault();
-                    if(!draggableQAOptionItem){ return false; }
+                    if(!dragbleQAOptionItem){ return false; }
                 });
                 optionBox.addEventListener("drop", function (event) {
                     event.preventDefault();
-                    if(!draggableQAOptionItem){ return false; }
+                    if(!dragbleQAOptionItem){ return false; }
                     itemDrop(event);
                 });
                 optionBox.addEventListener("dragend", function (event) {
-                    if(!draggableQAOptionItem){ return false; }
-                    draggableQAOptionItem.classList.remove('dragging');
-                    draggableQAOptionItem = null;
+                    if(!dragbleQAOptionItem){ return false; }
+                    dragbleQAOptionItem.classList.remove('dragging');
+                    dragbleQAOptionItem = null;
                 });
             }
             const preOptionBeforeImg = createAlement("img", [{
@@ -681,7 +681,7 @@
             let countItem = 0;
             document.getElementById("builder-item-box").querySelectorAll(".builder-item").forEach(element => {
                 let builderItem = element.cloneNode(true);
-                builderItem.removeAttribute("draggable");
+                // builderItem.removeAttribute("draggable");
                 countItem++;
                 let countOptions = 0;
                 builderItem.querySelectorAll("div").forEach(innerElement => {
@@ -690,7 +690,7 @@
                     }else if(innerElement.classList.contains("dragger") || innerElement.classList.contains("component-footer-box") || innerElement.classList.contains("add-qa-option-box")){
                         innerElement.remove();
                     }else{
-                        innerElement.removeAttribute("draggable");
+                        // innerElement.removeAttribute("draggable");
                         innerElement.classList.remove("unselectable");
                         innerElement.removeAttribute("contenteditable");
                         if(innerElement.classList.contains("builder-input")){
