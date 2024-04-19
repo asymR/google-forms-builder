@@ -232,7 +232,7 @@
     width: 20px;
     height: 20px;
 }
-.form-builder-main-box .dragger.unselectable::before {
+.form-builder-main-box .dragger::before {
     content: "";
     display: block;
     background-image: url('../images/drag.png');
