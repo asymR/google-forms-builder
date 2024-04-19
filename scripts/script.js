@@ -5,7 +5,6 @@
         if (!assets.endsWith('/')) {
             assets = assets + '/';
         }
-        loadCDNs();
         var totalBuilderItems = 0;
         var totalInputBoxes = 0;
         if (document.getElementById(targetId)) {
@@ -24,14 +23,6 @@
                 }
             });
         });
-        function loadCDNs() {
-            // const tweenMax = document.createElement('script');
-            // tweenMax.setAttribute('src',`${assets}scripts/TweenMax.min.js`);
-            // document.head.appendChild(tweenMax);
-            // const draggable = document.createElement('script');
-            // draggable.setAttribute('src',`${assets}scripts/Draggable.min.js`);
-            // document.head.appendChild(draggable);
-        }
         function createAlement(name = "div", attributes=[], classes=[]) {
             const element = document.createElement(name);
             attributes.forEach(attribute => {
@@ -137,10 +128,8 @@
             }]);
             const footerAddTitleDescription = createFooterButton("add-title-and-desc.png", "Add title and description", "add-title-and-description");
             const multipleChoice = createFooterButton("add-question.png", "Add multiple choice", "add-multiple-choice");
-            // const shortQuestionAnswer = createFooterButton("add-question-answer.png", "Add short question answer", "add-short-question-answer");
-            // const longQuestionAnswer = createFooterButton("add-question-answer.png", "Add long question answer", "add-long-question-answer");
-            // footerBox.appendChild(shortQuestionAnswer);
-            // footerBox.appendChild(longQuestionAnswer);
+            const questionAnswer = createFooterButton("question-answer.png", "Add question answer", "add-question-answer");
+            footerBox.appendChild(questionAnswer);
             footerBox.appendChild(multipleChoice);
             footerBox.appendChild(footerAddTitleDescription);
             return footerBox;
@@ -259,20 +248,16 @@
                 const multipleChoiceBox = createMultipleChoiceComponent();
                 item.appendChild(multipleChoiceBox);
             }
-            if(type == "add-short-question-answer"){
-                const shortAnswerQuestionBox = createanswerQuestionComponent("short");
-                item.appendChild(shortAnswerQuestionBox);
-            }
-            if(type == "add-long-question-answer"){
-                const longAnswerQuestionBox = createanswerQuestionComponent("long");
-                item.appendChild(longAnswerQuestionBox);
+            if(type == "add-question-answer"){
+                const answerQuestionBox = createanswerQuestionComponent();
+                item.appendChild(answerQuestionBox);
             }
             if(footer){
                 const footerOptions = {};
-                if(type == "add-title-and-description" || type == "add-multiple-choice" || type == "add-short-question-answer" || type == "add-long-question-answer"){
+                if(type == "add-title-and-description" || type == "add-multiple-choice" || type == "add-question-answer"){
                     footerOptions.delete = true;
                 }
-                if(type == "add-multiple-choice" || type == "add-short-question-answer" || type == "add-long-question-answer"){
+                if(type == "add-multiple-choice" || type == "add-question-answer"){
                     footerOptions.required = true;
                 }
                 if(!isObjEmpty(footerOptions)){
@@ -325,7 +310,7 @@
             const commonInputBox = createQAInputBox();
             box.appendChild(commonInputBox);
             const optionsMainBox = createAlement("div");
-            optionsMainBox.classList.add("short-qa-main-box");
+            optionsMainBox.classList.add("qa-main-box");
             box.appendChild(optionsMainBox);
             return box;
         }
@@ -699,12 +684,6 @@
             mainResultBox.appendChild(builderItemBox);
             return mainResultBox;
         }
-    }
-    function filterString(string) {
-        let searchString = "`";
-        let replacementString = "'";
-        let newString = string.replace(new RegExp(searchString, 'g'), replacementString);
-        return newString;
     }
     window.formBuilderLib = formBuilderLib;
 })();

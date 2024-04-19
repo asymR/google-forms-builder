@@ -87,7 +87,7 @@
     width: 20px;
     opacity: 0.5;
 }
-.form-builder-main-box .unselectable, .form-builder-main-box .add-title-and-description *, .form-builder-main-box .component-footer-box *, .form-builder-main-box .qa-option-box *, .form-builder-main-box .add-qa-option-box *{
+.form-builder-main-box .unselectable, .form-builder-main-box .add-title-and-description *, .form-builder-main-box .component-footer-box *, .form-builder-main-box .qa-option-box *, .form-builder-main-box .add-qa-option-box *, .form-builder-main-box .builder-input-widget *{
     user-drag: none;
     -webkit-user-drag: none;
     user-select: none;
