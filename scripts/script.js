@@ -2,6 +2,12 @@
     'use strict';
     var formBuilderLib = {};
     formBuilderLib.load = function(targetId, assets, saveFormCallBack) {
+        loadCDNs();
+        function loadCDNs() {
+            const sortable = document.createElement('script');
+            sortable.setAttribute('src',`${assets}scripts/Sortable.min.js`);
+            document.head.appendChild(sortable);
+        }
         if (!assets.endsWith('/')) {
             assets = assets + '/';
         }
@@ -9,7 +15,13 @@
         var totalInputBoxes = 0;
         if (document.getElementById(targetId)) {
             const response = initializeComponents();
-            document.getElementById(targetId).appendChild(response);
+            document.getElementById(targetId).appendChild(response.mainBox);
+            setTimeout(() => {
+                new Sortable(response.builderItemBox, {
+                    handle: '.builder-item-dragger',
+                    animation: 150
+                });
+            }, 1000);
         }
         document.addEventListener('DOMContentLoaded', () => {
             document.addEventListener('click', (e) => {
@@ -179,25 +191,7 @@
             const draggerBox = createAlement("div", [{
                 name: "draggable",
                 value: true
-            }], ["dragger"]);
-            draggerBox.addEventListener("dragstart", function (event) {
-                // dragbleBuilderItem = event.target;
-                // dragbleBuilderItem.classList.add('dragging');
-            });
-            draggerBox.addEventListener("dragover", function (event) {
-                // event.preventDefault();
-                // if(!dragbleBuilderItem){ return false; }
-            });
-            draggerBox.addEventListener("drop", function (event) {
-                // event.preventDefault();
-                // if(!dragbleBuilderItem){ return false; }
-                // itemDrop(event);
-            });
-            draggerBox.addEventListener("dragend", function (event) {
-                // if(!dragbleBuilderItem){ return false; }
-                // dragbleBuilderItem.classList.remove('dragging');
-                // dragbleBuilderItem = null;
-            });
+            }], ["dragger", "builder-item-dragger"]);
             return draggerBox;
         }
         function createFormComponent(type, drag = true, footer=false) {
@@ -275,11 +269,17 @@
             const commonInputBox = createQAInputBox();
             box.appendChild(commonInputBox);
             const optionsMainBox = createAlement("div");
-            optionsMainBox.classList.add("qa-option-main-box");
+            optionsMainBox.classList.add("qa-option-main-box"); 
             const optionsBox = createQAOptionsBox(1);
             optionsMainBox.appendChild(optionsBox);
             const addQaOptionButton = addQaOptionButtonBox();
             optionsMainBox.appendChild(addQaOptionButton);
+            setTimeout(() => {
+                new Sortable(optionsMainBox, {
+                    handle: '.qa-dragger',
+                    animation: 150
+                });
+            }, 1000);
             box.appendChild(optionsMainBox);
             return box;
         }
@@ -359,27 +359,7 @@
             },{
                 name: "draggable",
                 value: true
-            }], ["qa-option-darg-image", "qa-item-option-element"]);
-            if(type == "input"){
-                preOptionBeforeImg.addEventListener("dragstart", function (event) {
-                    // dragbleQAOptionItem = event.target;
-                    // dragbleQAOptionItem.classList.add('dragging');
-                });
-                preOptionBeforeImg.addEventListener("dragover", function (event) {
-                    // event.preventDefault();
-                    // if(!dragbleQAOptionItem){ return false; }
-                });
-                preOptionBeforeImg.addEventListener("drop", function (event) {
-                    // event.preventDefault();
-                    // if(!dragbleQAOptionItem){ return false; }
-                    // itemDrop(event);
-                });
-                preOptionBeforeImg.addEventListener("dragend", function (event) {
-                    // if(!dragbleQAOptionItem){ return false; }
-                    // dragbleQAOptionItem.classList.remove('dragging');
-                    // dragbleQAOptionItem = null;
-                });
-            }
+            }], ["qa-option-darg-image", "qa-item-option-element", "qa-dragger"]);
             optionBox.appendChild(preOptionBeforeImg);
             const optionBeforeImg = createAlement("img", [{
                 name: "src",
@@ -639,7 +619,10 @@
             const saveFormBox = getSaveFormBox();
             footerMainBox.appendChild(saveFormBox);
             mainBox.appendChild(footerMainBox);
-            return mainBox;
+            return {
+                mainBox,
+                builderItemBox
+            };
         }
         function getSaveFormBox() {
             const mainBox = createAlement("div", [{
@@ -683,7 +666,6 @@
             let countItem = 0;
             document.getElementById("builder-item-box").querySelectorAll(".builder-item").forEach(element => {
                 let builderItem = element.cloneNode(true);
-                // builderItem.removeAttribute("draggable");
                 countItem++;
                 let countOptions = 0;
                 builderItem.querySelectorAll("div").forEach(innerElement => {
@@ -692,7 +674,6 @@
                     }else if(innerElement.classList.contains("dragger") || innerElement.classList.contains("component-footer-box") || innerElement.classList.contains("add-qa-option-box")){
                         innerElement.remove();
                     }else{
-                        // innerElement.removeAttribute("draggable");
                         innerElement.classList.remove("unselectable");
                         innerElement.removeAttribute("contenteditable");
                         if(innerElement.classList.contains("builder-input")){
