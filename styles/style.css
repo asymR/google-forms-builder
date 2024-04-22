@@ -49,7 +49,7 @@
 }
 [placeholder]:empty::before {
     content: attr(placeholder);
-    color: #555; 
+    color: #555;
     cursor: text;
 }
 
@@ -220,6 +220,8 @@
 .form-builder-main-box .qa-option-box .qa-radio-option{
     width: 20px;
     height: 20px;
+    position: relative;
+    top: 3px;
 }
 .form-builder-main-box .qa-other-option-box .qa-radio-option{
     width: 23px;

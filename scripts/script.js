@@ -2,14 +2,14 @@
     'use strict';
     var formBuilderLib = {};
     formBuilderLib.load = function(targetId, assets, saveFormCallBack) {
+        if (!assets.endsWith('/')) {
+            assets = assets + '/';
+        }
         loadCDNs();
         function loadCDNs() {
             const sortable = document.createElement('script');
             sortable.setAttribute('src',`${assets}scripts/Sortable.min.js`);
             document.head.appendChild(sortable);
-        }
-        if (!assets.endsWith('/')) {
-            assets = assets + '/';
         }
         var totalBuilderItems = 0;
         var totalInputBoxes = 0;
@@ -269,7 +269,7 @@
             const commonInputBox = createQAInputBox();
             box.appendChild(commonInputBox);
             const optionsMainBox = createAlement("div");
-            optionsMainBox.classList.add("qa-option-main-box"); 
+            optionsMainBox.classList.add("qa-option-main-box");
             const optionsBox = createQAOptionsBox(1);
             optionsMainBox.appendChild(optionsBox);
             const addQaOptionButton = addQaOptionButtonBox();
@@ -579,7 +579,7 @@
                     linkButton.classList.add("active");
                 }
             } catch (error) {
-                
+
             }
         }
         function showWidgetAfterInput(input, event) {
@@ -715,7 +715,9 @@
                             }],["qa-radio-option"]);
                             innerElement.classList.add("qa-radio-box");
                             innerElement.innerHTML = "";
-                            innerElement.appendChild(radioOption);
+                            let radioOptionBox = createAlement("div");
+                            radioOptionBox.appendChild(radioOption);
+                            innerElement.appendChild(radioOptionBox);
                             innerElement.appendChild(optionBox);
                             if(innerElement.classList.contains("qa-other-option-box")){
                                 innerElement.appendChild(createAlement("input", [], ["input"]));
