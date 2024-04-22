@@ -1,7 +1,7 @@
 (function() {
     'use strict';
     var formBuilderLib = {};
-    formBuilderLib.load = function(targetId, assets, saveFormCallBack) {
+    formBuilderLib.load = function(targetId, assets, saveFormCallBack, jsonData = null) {
         if (!assets.endsWith('/')) {
             assets = assets + '/';
         }
@@ -13,15 +13,31 @@
         }
         var totalBuilderItems = 0;
         var totalInputBoxes = 0;
-        if (document.getElementById(targetId)) {
+        var targetedElement = document.getElementById(targetId);
+        if (targetedElement) {
             const response = initializeComponents();
-            document.getElementById(targetId).appendChild(response.mainBox);
+            targetedElement.appendChild(response.mainBox);
             setTimeout(() => {
                 new Sortable(response.builderItemBox, {
                     handle: '.builder-item-dragger',
                     animation: 150
                 });
-            }, 1000);
+                preloadFormContent();
+            }, 500);
+        }
+        function preloadFormContent() {
+            let formBuilder = targetedElement;
+            try {
+                jsonData = JSON.parse(jsonData??"{}");
+                if(jsonData.title){
+                    formBuilder.querySelector("div[name=form-title]").innerHTML = jsonData.title;
+                    formBuilder.querySelector("div[name=form-desc]").innerHTML = jsonData.desc;
+                    const otherElements = jsonToHtml(jsonData.otherElements);
+                    if(otherElements != "undefined"){
+                        document.getElementById("builder-item-box").innerHTML = otherElements;
+                    }
+                }
+            } catch (error) { }
         }
         document.addEventListener('DOMContentLoaded', () => {
             document.addEventListener('click', (e) => {
@@ -643,10 +659,63 @@
             mainBox.appendChild(saveButton);
             return mainBox;
         }
+        function htmlToJson(element) {
+            const json = {
+                tagName: element.tagName.toLowerCase(),
+                attributes: {},
+                styles: element.getAttribute("style"),
+                content: element.hasAttribute("contenteditable") && element.getAttribute("contenteditable") === "true" ? element.innerHTML : null,
+                children: [],
+            };
+            for (let i = 0; i < element.attributes.length; i++) {
+                const attr = element.attributes[i];
+                json.attributes[attr.name] = attr.value;
+            }
+            for (let i = 0; i < element.children.length; i++) {
+                const childElement = element.children[i];
+                json.children.push(htmlToJson(childElement));
+            }
+            return json;
+        }
+        function jsonToHtml(json) {
+            let resultHtml = '';
+            for (let index = 0; index < json.length; index++) {
+                const element = json[index];
+                let html = '';
+                if (element.content !== null) {
+                    html += element.content;
+                } else {
+                    html += `<${element.tagName}`;
+                    if (element.attributes) {
+                        const attributesArray = Object.entries(element.attributes);
+                        for (let [key, value] of attributesArray) {
+                            html += ` ${key}="${value}"`;
+                        }
+                    }
+                    if (element.styles) {
+                        html += ` style="${element.styles}"`;
+                    }
+                    html += '>';
+                    if (element.children) {
+                        html += jsonToHtml(element.children);
+                    }
+                    html += `</${element.tagName}>`;
+                }
+                resultHtml += html;
+            }
+            return resultHtml;
+        }
         function saveFormData() {
+            const jsonData = {};
             const mainResultBox = createAlement("div", [], ["form-builder-main-box"]);
             const formTitleParentBox = document.querySelector("div[name=form-title]").parentElement.parentElement.cloneNode(true);
             formTitleParentBox.querySelectorAll("div").forEach(element => {
+                if(element.getAttribute("name") == "form-title"){
+                    jsonData.title = element.innerHTML;
+                }
+                if(element.getAttribute("name") == "form-desc"){
+                    jsonData.desc = element.innerHTML;
+                }
                 element.removeAttribute("contenteditable");
                 if(element.classList.contains("builder-input")){
                     if(element.innerHTML.trim() == ""){
@@ -666,7 +735,9 @@
                 "value" : "builder-item-box"
             }]);
             let countItem = 0;
+            var otherElements = [];
             document.getElementById("builder-item-box").querySelectorAll(".builder-item").forEach(element => {
+                otherElements.push(htmlToJson(element));
                 let builderItem = element.cloneNode(true);
                 countItem++;
                 let countOptions = 0;
@@ -749,11 +820,11 @@
                 }
                 builderItemBox.appendChild(builderItem);
             });
+            jsonData.otherElements = otherElements;
             mainResultBox.appendChild(builderItemBox);
-            let formTitle = document.querySelector("div[name=form-title]").innerHTML;
             return {
-                title: formTitle,
                 html: mainResultBox,
+                json: jsonData
             };
         }
     }

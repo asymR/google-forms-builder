@@ -67,6 +67,7 @@
     border-radius: var(--border-radius-base);
     padding: 5px;
     display: flex;
+    opacity: 1;
 }
 .form-builder-main-box .builder-input-widget button img{
     width: 1.2rem;
