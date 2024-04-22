@@ -11,8 +11,6 @@
             sortable.setAttribute('src',`${assets}scripts/Sortable.min.js`);
             document.head.appendChild(sortable);
         }
-        var totalBuilderItems = 0;
-        var totalInputBoxes = 0;
         var targetedElement = document.getElementById(targetId);
         if (targetedElement) {
             const response = initializeComponents();
@@ -62,10 +60,9 @@
             return element;
         }
         function createInput(parentItem, params) {
-            totalInputBoxes++;
             const inputBox = createAlement("div", [{
                 name: "data-builder-input-box",
-                value: (totalInputBoxes + 1)
+                value: randomIdGenerator()
             }], ["builder-input-box"]);
             const input = createAlement("div", [{
                 name: "contenteditable",
@@ -162,46 +159,11 @@
             footerBox.appendChild(footerAddTitleDescription);
             return footerBox;
         }
-        var dragbleBuilderItem = null;
-        function builderItem(allClasses=[], drag) {
-            totalBuilderItems++;
+        function builderItem(allClasses=[]) {
             allClasses.push("builder-item");
             const item = createAlement("div", [], allClasses);
-            item.setAttribute("data-id", totalBuilderItems);
+            item.setAttribute("data-id", randomIdGenerator());
             return item;
-        }
-        function itemDrop(event) {
-            try {
-                let container = null;
-                let dragbleElements = null;
-                if(event.target.classList.contains('qa-item-option-element') == true){
-                    container = event.target.closest(".qa-option-main-box");
-                    dragbleElements = [...container.querySelectorAll('.qa-option-box:not(.dragging)')];
-                }else{
-                    container = document.getElementById('builder-item-box');
-                    dragbleElements = [...container.querySelectorAll('.builder-item:not(.dragging)')];
-                }
-                let dragging = document.querySelector('.dragging');
-                let afterElement = getDragAfterElement(dragbleElements, event.clientY);
-                if(afterElement.classList.contains('qa-option-box') == false && dragging.classList.contains('qa-item-option-element') == true){
-                    return false;
-                }
-                if(afterElement.classList.contains('builder-item') == false && dragging.classList.contains('builder-item') == true){
-                    return false;
-                }
-                container.insertBefore(dragging, afterElement);
-            } catch (error) { }
-        }
-        function getDragAfterElement(dragbleElements, y) {
-            return dragbleElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
         function getDragger() {
             const draggerBox = createAlement("div", [{
@@ -682,25 +644,24 @@
             for (let index = 0; index < json.length; index++) {
                 const element = json[index];
                 let html = '';
-                if (element.content !== null) {
-                    html += element.content;
-                } else {
-                    html += `<${element.tagName}`;
-                    if (element.attributes) {
-                        const attributesArray = Object.entries(element.attributes);
-                        for (let [key, value] of attributesArray) {
-                            html += ` ${key}="${value}"`;
-                        }
+                html += `<${element.tagName}`;
+                if (element.attributes) {
+                    const attributesArray = Object.entries(element.attributes);
+                    for (let [key, value] of attributesArray) {
+                        html += ` ${key}="${value}"`;
                     }
-                    if (element.styles) {
-                        html += ` style="${element.styles}"`;
-                    }
-                    html += '>';
-                    if (element.children) {
-                        html += jsonToHtml(element.children);
-                    }
-                    html += `</${element.tagName}>`;
                 }
+                if (element.styles) {
+                    html += ` style="${element.styles}"`;
+                }
+                html += '>';
+                if (element.children) {
+                    html += jsonToHtml(element.children);
+                }
+                if (element.content != null) {
+                    html += element.content;
+                }
+                html += `</${element.tagName}>`;
                 resultHtml += html;
             }
             return resultHtml;
