@@ -34,6 +34,35 @@
                     if(otherElements != "undefined"){
                         document.getElementById("builder-item-box").innerHTML = otherElements;
                     }
+                    setTimeout(() => {
+                        document.querySelectorAll("div[embededInput=true]").forEach(input => {
+                            input.addEventListener("focusin", function(event) {
+                                showWidgetAfterInput(this, event);
+                                makeMyBoxActive(this, "add");
+                            });
+                            input.addEventListener("click", function(event) {
+                                showWidgetAfterInput(this, event);
+                                floatingInTheInput();
+                            });
+                            input.addEventListener("keydown", function() {
+                                floatingInTheInput();
+                            });
+                            input.addEventListener("keypress", function() {
+                                floatingInTheInput();
+                            });
+                            input.addEventListener('input', function(e) {
+                                preventTextFromStyling(e);
+                            });
+                            input.addEventListener('paste', function(e) {
+                                preventTextFromStyling(e);
+                            });
+                        });
+                        document.querySelectorAll("[embededComponentDeleteButton=true]").forEach(deleteButton => {
+                            deleteButton.addEventListener("click", function () {
+                                this.closest(".builder-item").remove();
+                            });
+                        });
+                    }, 100);
                 }
             } catch (error) { }
         }
@@ -401,6 +430,9 @@
                 const deleteButton = createAlement("img", [{
                     name: "src",
                     value: `${assets}images/delete.png`
+                },{
+                    name: "delete-component-button",
+                    value: true
                 }]);
                 deleteButton.addEventListener("click", function () {
                     this.closest(".builder-item").remove();
@@ -648,6 +680,12 @@
                 if (element.attributes) {
                     const attributesArray = Object.entries(element.attributes);
                     for (let [key, value] of attributesArray) {
+                        if(key == "delete-component-button"){
+                            html += ` embededComponentDeleteButton=true`;
+                        }
+                        if(key == "contenteditable"){
+                            html += ` embededInput=true`;
+                        }
                         html += ` ${key}="${value}"`;
                     }
                 }
