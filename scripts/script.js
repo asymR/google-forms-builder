@@ -277,12 +277,14 @@
             box.appendChild(commonInputBox);
             const optionsMainBox = createAlement("div");
             optionsMainBox.classList.add("qa-option-main-box");
+            const qaOptionsBox = createAlement("div", [], ["qa-options-box"]);
             const optionsBox = createQAOptionsBox(1);
-            optionsMainBox.appendChild(optionsBox);
+            qaOptionsBox.appendChild(optionsBox);
+            optionsMainBox.appendChild(qaOptionsBox);
             const addQaOptionButton = addQaOptionButtonBox();
             optionsMainBox.appendChild(addQaOptionButton);
             setTimeout(() => {
-                new Sortable(optionsMainBox, {
+                new Sortable(qaOptionsBox, {
                     handle: '.qa-dragger',
                     animation: 150
                 });
@@ -319,11 +321,7 @@
             addOptionInnerButton.addEventListener("click", function () {
                 const currentOptions = this.closest(".qa-option-main-box").querySelectorAll(".qa-option-box");
                 const optionsBox = createQAOptionsBox(currentOptions.length + 1, 'other');
-                if(currentOptions.length > 0){
-                    currentOptions[currentOptions.length - 1].after(optionsBox);
-                }else{
-                    this.closest(".qa-option-main-box").prepend(optionsBox);
-                }
+                this.parentElement.parentElement.parentElement.querySelector(".qa-options-box").after(optionsBox);
                 addOptionInnerButton.parentElement.querySelector(".or").style.display = "none";
                 addOptionInnerButton.style.display = "none";
             });
@@ -353,7 +351,6 @@
             box.appendChild(qaMainBox);
             return box;
         }
-        var dragbleQAOptionItem = null;
         function createQAOptionsBox(number=1, type = "input") {
             let typeClass = "qa-option-box";
             let qaDragger = "qa-dragger";
@@ -654,11 +651,15 @@
             return mainBox;
         }
         function htmlToJson(element) {
+            let content = element.hasAttribute("contenteditable") && element.getAttribute("contenteditable") === "true" ? element.innerHTML : null;
+            if (content == null && element.textContent === element.innerHTML) {
+                content = element.textContent;
+            }
             const json = {
                 tagName: element.tagName.toLowerCase(),
                 attributes: {},
                 styles: element.getAttribute("style"),
-                content: element.hasAttribute("contenteditable") && element.getAttribute("contenteditable") === "true" ? element.innerHTML : null,
+                content: content,
                 children: [],
             };
             for (let i = 0; i < element.attributes.length; i++) {

@@ -27,6 +27,7 @@
     position: relative;
 }
 .form-builder-main-box .builder-item .builder-input-box{
+    margin-top: 1rem;
     margin-bottom: 1rem;
 }
 .form-builder-main-box .builder-item.active{
@@ -174,7 +175,7 @@
     border-bottom: solid 1px lightgrey;
     cursor: text;
 }
-.form-builder-main-box .qa-option-main-box{
+.form-builder-main-box .qa-option-main-box, .form-builder-main-box .qa-options-box{
     display: grid;
     gap: 10px;
 }
