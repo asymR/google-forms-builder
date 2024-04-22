@@ -750,7 +750,11 @@
                 builderItemBox.appendChild(builderItem);
             });
             mainResultBox.appendChild(builderItemBox);
-            return mainResultBox;
+            let formTitle = document.querySelector("div[name=form-title]").innerHTML;
+            return {
+                title: formTitle,
+                html: mainResultBox,
+            };
         }
     }
     window.formBuilderLib = formBuilderLib;
